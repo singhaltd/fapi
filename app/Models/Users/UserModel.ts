@@ -3,8 +3,9 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
 export default class UserModel extends BaseModel {
+  public static table = 'sctb_users'
   @column({ isPrimary: true, columnName: 'user_id' })
-  public id: number
+  public id: string
   @column({ columnName: 'username' })
   public username: string
   @column({ columnName: 'password' })
@@ -36,8 +37,12 @@ export default class UserModel extends BaseModel {
   public updatedAt: DateTime
 
 
+
   @beforeSave()
-  public static async hashPassword(user: UserModel) {
+  public static async userAuth(user: UserModel) {
+    user.id = user.username
+    user.stat = 'P'
+    user.maker = 'SYSTEM'
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
     }
