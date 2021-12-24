@@ -13,7 +13,7 @@ export default class ApiTokens extends BaseSchema {
       table.string('ipaddress').notNullable()
       table.string('location').notNullable()
       table.string('device_info').notNullable()
-      table.string('opt',6).notNullable()
+      table.string('otp',6).notNullable()
       table.string('islogin')
       table.string('captoken').notNullable()
       table.string('captype').notNullable()

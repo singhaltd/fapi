@@ -3,7 +3,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import UserModel from 'App/Models/Users/UserModel'
 import Hash from '@ioc:Adonis/Core/Hash'
 import Encryption from '@ioc:Adonis/Core/Encryption'
-
+var CryptoJS = require("crypto-js");
 
 export default class AuthController {
     public async index({ request, response }: HttpContextContract) {
@@ -47,8 +47,9 @@ export default class AuthController {
             username: schema.string(),
             password: schema.string(),
             location: schema.string(),
-            captoken: schema.string(),
-            captype: schema.string()
+            captype: schema.string(),
+            captoken:schema.string(),
+            islogin:schema.string()
         })
         const dvice = request.headers().toString()
         const data = await request.validate({ schema: payload })
@@ -56,9 +57,10 @@ export default class AuthController {
             ipaddress: request.ip(),
             device_info: await Hash.make(dvice),
             location: data.location,
-            captoken: data.captoken,
             captype: data.captype,
-            otp: '123456'
+            captoken:data.captoken,
+            otp: '123456',
+            islogin: data.islogin
         }
 
         try {
@@ -91,11 +93,28 @@ export default class AuthController {
         const addres = request.ip()
         const payload = JSON.stringify(Object.assign(dvInfo, addres))
         const encrypted = Encryption.encrypt(payload)
+        
+        
+        try {
+            response.status(200);
+            return dvInfo['postman-token']
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    public async getotp({ request, auth, response }: HttpContextContract) {
+        // ip + user + password + device = captoken
+        const dvInfo = request.headers()
+        const addres = request.ip()
+        const payload = JSON.stringify({})
+        const user = Encryption.encrypt({username: 'laithong',password:'123456'})
+        var ciphertext = CryptoJS.AES.encrypt('my message', '1234').toString();
+        
 
 
         try {
             response.status(200);
-            return dvInfo['postman-token']
+            return ciphertext
         } catch (e) {
             console.log(e)
         }
