@@ -48,8 +48,8 @@ export default class AuthController {
             password: schema.string(),
             location: schema.string(),
             captype: schema.string(),
-            captoken:schema.string(),
-            islogin:schema.string()
+            captoken: schema.string(),
+            islogin: schema.string()
         })
         const dvice = request.headers().toString()
         const data = await request.validate({ schema: payload })
@@ -58,7 +58,7 @@ export default class AuthController {
             device_info: await Hash.make(dvice),
             location: data.location,
             captype: data.captype,
-            captoken:data.captoken,
+            captoken: data.captoken,
             otp: '123456',
             islogin: data.islogin
         }
@@ -93,8 +93,8 @@ export default class AuthController {
         const addres = request.ip()
         const payload = JSON.stringify(Object.assign(dvInfo, addres))
         const encrypted = Encryption.encrypt(payload)
-        
-        
+
+
         try {
             response.status(200);
             return dvInfo['postman-token']
@@ -107,9 +107,9 @@ export default class AuthController {
         const dvInfo = request.headers()
         const addres = request.ip()
         const payload = JSON.stringify({})
-        const user = Encryption.encrypt({username: 'laithong',password:'123456'})
+        const user = Encryption.encrypt({ username: 'laithong', password: '123456' })
         var ciphertext = CryptoJS.AES.encrypt('my message', '1234').toString();
-        
+
 
 
         try {
@@ -118,5 +118,10 @@ export default class AuthController {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    public async getProfile({ auth, response }) {
+        await auth.use('api').authenticate()
+        return response.json({ user: auth.use('api').user! })
     }
 }

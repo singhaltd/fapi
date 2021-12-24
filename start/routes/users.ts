@@ -10,9 +10,11 @@ Route.post('login/ato', 'Auth/Users/AuthController.login')
 Route.post('login/qr', 'Auth/Users/AuthController.loginQr')
 Route.get('verify/getrcap', 'Auth/Users/AuthController.getrcap')
 Route.get('verify/getotp', 'Auth/Users/AuthController.getotp')
+Route.get('profile', 'Auth/Users/AuthController.getProfile')
 Route.post('/logout', async ({ auth, response }) => {
-    await auth.use('api').revoke()
-    return {
-        logout: true
+    try {
+        return await auth.use('api').revoke()
+    } catch (e) {
+        console.log(e)
     }
 })
