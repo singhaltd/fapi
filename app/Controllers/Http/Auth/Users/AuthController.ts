@@ -3,7 +3,9 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import UserModel from 'App/Models/Users/UserModel'
 import Hash from '@ioc:Adonis/Core/Hash'
 import Encryption from '@ioc:Adonis/Core/Encryption'
+import OtpModel from 'App/Models/Verify/OtpModel'
 var CryptoJS = require("crypto-js");
+
 
 export default class AuthController {
     public async index({ request, response }: HttpContextContract) {
@@ -103,18 +105,35 @@ export default class AuthController {
         }
     }
     public async getotp({ request, auth, response }: HttpContextContract) {
-        // ip + user + password + device = captoken
-        const dvInfo = request.headers()
-        const addres = request.ip()
-        const payload = JSON.stringify({})
-        const user = Encryption.encrypt({ username: 'laithong', password: '123456' })
-        var ciphertext = CryptoJS.AES.encrypt('my message', '1234').toString();
+        // user + password + device > ip = captoken
+        const totp = Math.floor(100000 + Math.random() * 900000)
+        const parsedkey = CryptoJS.enc.Utf8.parse('1222');
+        const iv = CryptoJS.enc.Utf8.parse('1222');
+        const encrypted = CryptoJS.AES.encrypt(JSON.stringify({ username: 'laithong', password: '123456', uuid: '12345678910', code: totp }), parsedkey, { iv: iv, mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+
+        /// decrypt
+        var keys = CryptoJS.enc.Utf8.parse('1222');
+        let base64 = CryptoJS.enc.Base64.parse(encrypted.toString());
+        let src = CryptoJS.enc.Base64.stringify(base64);
+        var decrypt = CryptoJS.AES.decrypt(src, keys, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+        const cjs = JSON.parse(decrypt.toString(CryptoJS.enc.Utf8))
 
 
 
         try {
+            // var bytes = CryptoJS.AES.decrypt(verify, 'secret key 123');
+            // var originalText = bytes.toString(CryptoJS.enc.Utf8);
+            // const addres = request.ip()
+            await UserModel.query()
+                .where('username', cjs.username)
+                .update({ hash: encrypted.toString() })
             response.status(200);
-            return ciphertext
+            // return await OtpModel.create({
+            //     salt: encrypted.toString(),
+            //     hash: '12222',
+            //     code: totp
+            // })
+            return encrypted.toString()
         } catch (e) {
             console.log(e)
         }
