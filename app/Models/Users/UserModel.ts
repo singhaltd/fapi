@@ -10,6 +10,8 @@ export default class UserModel extends BaseModel {
   public username: string
   @column({ columnName: 'password' })
   public password: string
+  @column({ columnName: 'twof' })
+  public twof: boolean
   @column({ columnName: 'hash' })
   public hash: string
   @column({ columnName: 'ldap_user' })
@@ -42,6 +44,7 @@ export default class UserModel extends BaseModel {
   public static async userAuth(user: UserModel) {
     user.id = user.username
     user.stat = 'P'
+    user.twof = true
     user.maker = 'SYSTEM'
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)

@@ -66,10 +66,21 @@ export default class AuthController {
         }
 
         try {
+            const u = await UserModel.query()
+                .select('hash', 'twof')
+                .where('hash', data.captoken)
+                .firstOrFail()
+
             response.status(200);
-            return auth.use('api').attempt(data.username, data.password, rheader)
+            if (u && !u.twof) {
+                return auth.use('api').attempt(data.username, data.password, rheader)
+            } else {
+                return auth.use('api').attempt(data.username, data.password, rheader)
+            }
         } catch (e) {
             console.log(e)
+            response.status(401)
+            return 'login faild'
         }
     }
     public async loginQr({ request, auth, response }: HttpContextContract) {
@@ -127,6 +138,12 @@ export default class AuthController {
             await UserModel.query()
                 .where('username', cjs.username)
                 .update({ hash: encrypted.toString() })
+            await OtpModel.create({
+                salt: '1111111',
+                hash: encrypted.toString(),
+                code: totp
+
+            })
             response.status(200);
             // return await OtpModel.create({
             //     salt: encrypted.toString(),

@@ -9,6 +9,7 @@ export default class SctbUsersSchema extends BaseSchema {
       table.string('username').notNullable()
       table.string('password').notNullable()
       table.string('hash')
+      table.boolean('twof')
       table.string('ldap_user')
       table.string('stat', 1).notNullable()
       table.string('pwd_change_dt')
