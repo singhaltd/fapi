@@ -5,8 +5,8 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import Encryption from '@ioc:Adonis/Core/Encryption'
 import OtpModel from 'App/Models/Verify/OtpModel'
 var CryptoJS = require("crypto-js");
-
-
+import Mail from '@ioc:Adonis/Addons/Mail'
+import VerifyEmail from 'App/Mailers/VerifyEmail'
 export default class AuthController {
     public async index({ request, response }: HttpContextContract) {
 
@@ -138,11 +138,17 @@ export default class AuthController {
             await UserModel.query()
                 .where('username', cjs.username)
                 .update({ hash: encrypted.toString() })
-            await OtpModel.create({
-                salt: '1111111',
-                hash: encrypted.toString(),
-                code: totp
+            // await OtpModel.create({
+            //     salt: '1111111',
+            //     hash: encrypted.toString(),
+            //     code: totp
 
+            // })
+            await Mail.use('smtp').send((message) => {
+                message.subject('Welcome Onboard!')
+                    .from('singhasoft.21@gmail.com')
+                    .to('laithong865@gmail.com')
+                    .text('test')
             })
             response.status(200);
             // return await OtpModel.create({
