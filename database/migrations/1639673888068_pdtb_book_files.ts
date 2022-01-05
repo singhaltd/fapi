@@ -5,8 +5,9 @@ export default class PdtbBookFiles extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
+      table.string('ref_id')
+      table.string('fimage')
+      table.string('language', 2)
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

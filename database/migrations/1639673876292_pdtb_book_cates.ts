@@ -3,10 +3,13 @@ import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 export default class PdtbBookCates extends BaseSchema {
   protected tableName = 'pdtb_book_cates'
 
-  public async up () {
+  public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
+      table.string('cat_code', 5).primary().unique()
+      table.string('title').notNullable()
+      table.string('descr')
+      table.string('stat', 1).notNullable()
+      table.string('maker').notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
@@ -15,7 +18,7 @@ export default class PdtbBookCates extends BaseSchema {
     })
   }
 
-  public async down () {
+  public async down() {
     this.schema.dropTable(this.tableName)
   }
 }

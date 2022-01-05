@@ -144,11 +144,12 @@ export default class AuthController {
             //     code: totp
 
             // })
+
             await Mail.use('smtp').send((message) => {
                 message.subject('Welcome Onboard!')
                     .from('singhasoft.21@gmail.com')
                     .to('laithong865@gmail.com')
-                    .text('test')
+                    .text(`${totp}`)
             })
             response.status(200);
             // return await OtpModel.create({
