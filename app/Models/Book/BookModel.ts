@@ -3,7 +3,6 @@ import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import BcateModel from './BcateModel'
 import BaudioModel from './BaudioModel'
 import BepubModel from './BepubModel'
-
 export default class BookModel extends BaseModel {
   public static table = "pdtb_books"
   @column({ isPrimary: true, columnName: 'ref_id' })
@@ -22,6 +21,18 @@ export default class BookModel extends BaseModel {
   public isbn: string
   @column({ columnName: 'cate' })
   public cate: string
+  @column({ columnName: 'price' })
+  public price: number
+  @column({ columnName: 'tag' })
+  public tag: string
+  @column({ columnName: 'inst_qty' })
+  public qty: number
+  @column({ columnName: 'ccy' })
+  public ccy: string
+  @column({ columnName: 'user_id' })
+  public maker: string
+  @column({ columnName: 'author' })
+  public author: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

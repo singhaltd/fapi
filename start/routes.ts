@@ -21,3 +21,4 @@
 
 import './routes/users'
 import './routes/books'
+import './routes/review'

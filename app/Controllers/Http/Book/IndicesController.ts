@@ -30,8 +30,8 @@ export default class IndicesController {
     public async findBook({ params }: HttpContextContract) {
         try {
             const dtbook = await BookModel.query()
-                .preload('bcate', (query) => {
-                    query.select('catitle')
+                .preload('bcate', (q) => {
+                    q.select('catitle')
                 })
                 .preload('audio', (q) => {
                     q.select('*')

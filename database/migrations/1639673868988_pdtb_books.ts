@@ -12,7 +12,18 @@ export default class PdtbBooks extends BaseSchema {
       table.string('language', 2).notNullable()
       table.string('local', 2).notNullable()
       table.string('isbn')
-      table.string('cate',5).unsigned().references('cat_code').inTable('pdtb_book_cates')
+      table.string('cate', 5)
+      table.string('user_id')
+      table.string('author')
+      table.string('approver')
+      table.float('price', 10, 2).defaultTo(0)
+      table.boolean('instrock').defaultTo(0)
+      table.integer('inst_qty', 7).defaultTo(0)
+      table.integer('div_inst').defaultTo(0)
+      table.string('stat_bk', 1)
+      table.string('stat_ad', 1)
+      table.string('stat_ep', 1)
+      table.string('ccy',3)
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
